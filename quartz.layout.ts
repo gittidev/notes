@@ -54,14 +54,14 @@ export const defaultContentPageLayout: PageLayout = {
       globalGraph: {
         depth: -1,
         scale: 0.9,
-        repelForce: 0.9,
-        centerForce: 0.2,
+        repelForce: 0.7,
+        centerForce: 0.45, // 따로 떨어진 묶음(웹·네트워크)도 화면 안에 붙잡기
         linkDistance: 45,
         fontSize: 0.6,
         opacityScale: 3,
         showTags: false,
         focusOnHover: true,
-        enableRadial: false,
+        enableRadial: true,
       },
     }),
     Component.DesktopOnly(Component.TableOfContents()),
