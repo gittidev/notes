@@ -194,10 +194,21 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
   )
 
   // calculate color
+  // 폴더(분야)별 색 — 옵시디언 색 그룹처럼 (gittidev/notes 수정)
+  const folderColors: [string, string][] = [
+    ["AI·학습/", "#6366f1"],
+    ["드론·측량/", "#0d9488"],
+    ["공간정보·3D/", "#d97706"],
+    ["웹·네트워크/", "#e11d48"],
+  ]
   const color = (d: NodeData) => {
     const isCurrent = d.id === slug
     if (isCurrent) {
       return computedStyleMap["--secondary"]
+    }
+    const folder = folderColors.find(([prefix]) => d.id.startsWith(prefix))
+    if (folder) {
+      return folder[1]
     } else if (visited.has(d.id) || d.id.startsWith("tags/")) {
       return computedStyleMap["--tertiary"]
     } else {
@@ -209,7 +220,7 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
     const numLinks = graphData.links.filter(
       (l) => l.source.id === d.id || l.target.id === d.id,
     ).length
-    return 2 + Math.sqrt(numLinks)
+    return 3 + Math.sqrt(numLinks) * 1.3 // 많이 이어진 개념일수록 크게
   }
 
   let hoveredNodeId: string | null = null
@@ -378,7 +389,7 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
       interactive: false,
       eventMode: "none",
       text: n.text,
-      alpha: 0,
+      alpha: Math.max((scale * opacityScale - 1) / 3.75, 0), // 처음부터 이름 보이기(확대 전에도)
       anchor: { x: 0.5, y: 1.2 },
       style: {
         fontSize: fontSize * 15,
